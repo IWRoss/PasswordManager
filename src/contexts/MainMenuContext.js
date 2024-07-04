@@ -16,24 +16,29 @@ export const MainMenuProvider = ({children}) => {
     const [HighTierData, setHighTierData] = useState([]);
 
     //Imported Vars
-    const {employeeData} = useAuth();
-    const {loggedAccess} = useAuth();
+    const {employeeData, loggedAccess, setEmployeeDataByIndex} = useAuth();
+    
 
     //Functions here
 
     const promoteEmployee = (username) => {
         if (userLoggedIn) {
             for (let i = 0; i < employeeData.length; i++) {
-                if (employeeData[i][0] == EmployeeID) { 
+                if (employeeData[i][0] == username) { 
                     //is the entered username in the employee database?
-                    if (employeeData[i][2] == "None") {
-                    employeeData[i][2] = "Low";
-                    } else if (employeeData[i][2] == "Low") {
-                    employeeData[i][2] = "Medium";
-                    } else if (employeeData[i][2] == "Medium") {
-                    employeeData[i][2] = "High";
-                    } else if (employeeData[i][2] == "High") {
-                    employeeData[i][2] = "Master";
+                    switch(employeeData[i][2]){
+                        case "High":
+                            setEmployeeDataByIndex(i, 2, "Master");
+                            break;
+                        case "Medium":
+                            setEmployeeDataByIndex(i, 2, "High");
+                            break;
+                        case "Low":
+                            setEmployeeDataByIndex(i, 2, "Medium");
+                            break;
+                        default:
+                            setEmployeeDataByIndex(i, 2, "Low");
+                            break;
                     }
                 }
             }
@@ -44,16 +49,20 @@ export const MainMenuProvider = ({children}) => {
         //Debug method - decrease access level
         if (userLoggedIn) {
             for (let i = 0; i < employeeData.length; i++) {
-                if (employeeData[i][0] == EmployeeID) {
-                    //is the entered username in the employee database?
-                    if (employeeData[i][2] == "Low") {
-                    employeeData[i][2] = "None";
-                    } else if (employeeData[i][2] == "Medium") {
-                    employeeData[i][2] = "Low";
-                    } else if (employeeData[i][2] == "High") {
-                    employeeData[i][2] = "Medium";
-                    } else if (employeeData[i][2] == "Master") {
-                    employeeData[i][2] = "High";
+                if (employeeData[i][0] == username) {
+                    switch(employeeData[i][2]){
+                        case "Master":
+                            setEmployeeDataByIndex(i, 2, "High");
+                            break;
+                        case "High":
+                            setEmployeeDataByIndex(i, 2, "Medium");
+                            break;
+                        case "Medium":
+                            setEmployeeDataByIndex(i, 2, "Low");
+                            break;
+                        default:
+                            setEmployeeDataByIndex(i, 2, "None");
+                            break;
                     }
                 }
             }
@@ -62,13 +71,19 @@ export const MainMenuProvider = ({children}) => {
 
     const addLowLevelData = (username, password) => {
         if (loggedAccess != "None") {
-            LowTierData.push([username, password]);
+            setLowTierData([
+                ...LowTierData,
+                [username, password]
+            ]);
         }
     }
 
     const addMidLevelData = (username, password) => {
         if (loggedAccess != ("None" || "Low")) {
-            MidTierData.push([username, password]);
+            setMidTierData([
+                ...MidTierData,
+                [username, password]
+            ]);
         }
     }
 
@@ -83,34 +98,34 @@ export const MainMenuProvider = ({children}) => {
 
     const removeLowLevelData = (username, password) => {
         const index = LowTierData.indexOf([username, password]);
-        if (index > -1) {
+        if (index !== -1) {
             if (loggedAccess != "None") {
-                LowTierData.splice(index, 1);
-                setLowTierData(Object.values(LowTierData.filter((value, i) => {
-                    return index !== i;
-                })))
+                const newArr = [...LowTierData.slice(0, index), ...LowTierData.slice(index+1)];
+                setLowTierData(newArr);
             }
         }
     }
 
     const removeMidLevelData = (username, password) => {
         const index = MidTierData.indexOf([username, password]);
-        if (index > -1) {
+        if (index !== -1) {
             if (loggedAccess != ("None" || "Low")) {
-                MidTierData.splice(index, 1);
+                const newArr = [...MidTierData.slice(0, index), ...MidTierData.slice(index+1)];
+                setMidTierData(newArr);
             }
         }
     }
 
     const removeHighLevelData = (username, password) => {
         const index = HighTierData.indexOf([username, password]);
-        if (index > -1) {
+        if (index !== -1) {
             if (loggedAccess == ("High" || "Master")) {
-                HighTierData.splice(index, 1);
+                const newArr = [...HighTierData.slice(0, index), ...HighTierData.slice(index+1)];
+                setHighTierData(newArr);
             }
         }
     }
-
+    
     const accessLowLevelData = () => {
         if (loggedAccess != "None") {
             return LowTierData;
@@ -143,6 +158,5 @@ export const MainMenuProvider = ({children}) => {
         }}>
             {children}
         </MainMenuContext.Provider>
-
     )
 }

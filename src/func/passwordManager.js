@@ -19,7 +19,7 @@ function promoteEmployee(EmployeeID) {
   //Debug method - increase access level
   if (userLoggedIn) {
     for (let i = 0; i < employeeData.length; i++) {
-      if (employeeData[i][0] == EmployeeID) {
+      if (employeeData[i][0] == EmployeeID) { 
         //is the entered username in the employee database?
         if (employeeData[i][2] == "None") {
           employeeData[i][2] = "Low";
@@ -66,12 +66,14 @@ function registerEmployee(EmployeeID, password) {
     employeeData.push([EmployeeID, password, "None"]); //if not, add them to database.
   }
 }
-function logIn(EmployeeID) {
+function logIn(EmployeeID, password) {
   let found = false;
   for (let i = 0; i < employeeData.length; i++) {
     if (employeeData[i][0] == EmployeeID) {
-      found = true;
-      let index = i;
+      if (employeeData[i][1] == password){
+        found = true;
+        let index = i;
+      }
     }
   }
   if (found == true) {
@@ -119,7 +121,7 @@ function removeLowLevelData(username, password) {
 }
 
 function removeMidLevelData(username) {
-  const index = MidTierData.indexOf(username);
+  const index = MidTierData.indexOf([username, password]);
   if (index > -1) {
     if (loggedAccess != ("None" || "Low")) {
       MidTierData.splice(index, 1);
@@ -128,7 +130,7 @@ function removeMidLevelData(username) {
 }
 
 function removeHighLevelData(username) {
-  const index = HighTierData.indexOf(username);
+  const index = HighTierData.indexOf([username, password]);
   if (index > -1) {
     if (loggedAccess == ("High" || "Master")) {
       HighTierData.splice(index, 1);
@@ -137,21 +139,18 @@ function removeHighLevelData(username) {
 }
 
 function accessLowLevelData() {
-  //Logged-In Username
   if (loggedAccess != "None") {
     return LowTierData;
   }
 }
 
 function accessMidLevelData() {
-  //Logged-In Username
   if (loggedAccess != ("None" || "Low")) {
     return MidTierData;
   }
 }
 
 function accessHighLevelData() {
-  //Logged-In Username
   if (loggedAccess == ("High" || "Master")) {
     return HighTierData;
   }
