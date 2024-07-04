@@ -5,6 +5,7 @@ import App from "./components/App/App";
 import reportWebVitals from "./reportWebVitals";
 
 import { AuthProvider } from "./contexts/AuthContext";
+import { MainMenuProvider } from "./contexts/MainMenuContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

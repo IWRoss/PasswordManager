@@ -8,7 +8,7 @@ function Login({ auth, login }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const {userData} = useAuth();
+  const {userData, logIn} = useAuth();
 
   if (auth.isAuthorised) {
     return <p>Authorised</p>;
@@ -44,7 +44,7 @@ function Login({ auth, login }) {
         <p>{error}</p>
       ))}
 
-      <button onClick={() => login(username, password)}>Login</button>
+      <button onClick={() => logIn(username, password)}>Login</button>
     </>
   );
 }

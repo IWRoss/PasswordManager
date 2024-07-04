@@ -4,7 +4,9 @@ import { useAuth } from "./AuthContext";
 
 export const MainMenuContext = createContext();
 
-export const UseMainMenu = useContext(MainMenuContext);
+export function useMainMenu() {
+    return useContext(MainMenuContext);
+} 
 
 export const MainMenuProvider = ({children}) => {
     //States here
@@ -16,7 +18,7 @@ export const MainMenuProvider = ({children}) => {
     const [HighTierData, setHighTierData] = useState([]);
 
     //Imported Vars
-    const {employeeData, loggedAccess, setEmployeeDataByIndex} = useAuth();
+    const {employeeData, loggedAccess, setEmployeeDataByIndex, userLoggedIn} = useAuth();
     
 
     //Functions here
@@ -143,7 +145,6 @@ export const MainMenuProvider = ({children}) => {
             return HighTierData;
         }
     }
-
 
     return (
         <MainMenuContext.Provider value={{

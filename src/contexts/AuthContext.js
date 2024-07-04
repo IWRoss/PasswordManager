@@ -2,7 +2,7 @@ import { useContext, useState, createContext, useMemo } from "react";
 
 export const AuthContext = createContext();
 
-export const useAuth = useContext(AuthContext);
+export function useAuth() { return useContext(AuthContext) };
 
 export const AuthProvider = ({children}) => {
 
@@ -19,10 +19,10 @@ export const AuthProvider = ({children}) => {
     const registerEmployee = (username, password) => {  //(employee username, employee password)
         let found = false;
         for (let i = 0; i < employeeData.length; i++) {
-          if (employeeData[i][0] == username) {
-            //is the entered username already in the employee database?
-            found = true;
-          }
+            if (employeeData[i][0] == username) {
+                //is the entered username already in the employee database?
+                found = true;
+            }
         }
         if (found == false) {
             setEmployeeData([
@@ -33,22 +33,22 @@ export const AuthProvider = ({children}) => {
     }
 
     const logIn = (username, password) => {
+        let index = 0
         let found = false;
         for (let i = 0; i < employeeData.length; i++) {
-          if (employeeData[i][0] == EmployeeID) {
-            if (employeeData[i][1] == password){
-              found = true;
-              let index = i;
-            }
-          }
+            if (employeeData[i][0] == username) {
+                if (employeeData[i][1] == password){
+                    found = true;
+                    index = i;
+                }
+            } 
         }
         if (found == true) {
-          setUserLoggedIn(true);
-          setLoggedUsername(employeeData[index][0]);
-          setLoggedPassword(employeeData[index][1]);
-          setLoggedAccess(employeeData[index][2]);
+            setUserLoggedIn(true);
+            setLoggedUsername(employeeData[index][0]);
+            setLoggedPassword(employeeData[index][1]);
+            setLoggedAccess(employeeData[index][2]);
         }
-
     }
 
     const logOut = () => {
@@ -61,22 +61,18 @@ export const AuthProvider = ({children}) => {
     }
 
     const setEmployeeDataByIndex = (index, key, value) => {
-
         const newEmployeeData = employeeData[index];
-
         newEmployeeData[key] = value;
-
         setEmployeeData([
             ...employeeData.slice(0, index-1),
             newEmployeeData,
             ...employeeData.slice(index+1)
         ])
-
     };
 
     return (
         <AuthContext.Provider value={{
-            employeeDataData,
+            employeeData,
             setEmployeeData,
             setEmployeeDataByIndex,
             loggedUsername,
@@ -89,5 +85,4 @@ export const AuthProvider = ({children}) => {
             {children}
         </AuthContext.Provider>
     )
-
 };

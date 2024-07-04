@@ -11,27 +11,30 @@ function App() {
     username: false,
   });
 
-  const login = (username, password) => {
-    if (username !== "admin" || password !== "password") {
-      setAuth({
-        ...auth,
-        isAuthorised: false,
-        username: false,
-        errors: ["Credentials not correct"],
-      });
-      return;
-    }
+  // const login = (username, password) => {
+  //   if (username !== "admin" || password !== "password") {
+  //     setAuth({
+  //       ...auth,
+  //       isAuthorised: false,
+  //       username: false,
+  //       errors: ["Credentials not correct"],
+  //     });
+  //     return;
+  //   }
 
-    setAuth({
-      ...auth,
-      isAuthorised: true,
-      username: username,
-    });
-  };
+  //   setAuth({
+  //     ...auth,
+  //     isAuthorised: true,
+  //     username: username,
+  //   });
+  // };
 
   return (
     <div className="App">
-      <Login auth={auth} login={login} />
+      <Login 
+        auth={auth} 
+        //login={login} 
+      />
     </div>
   );
 }
