@@ -80,7 +80,10 @@ export const AuthProvider = ({children}) => {
             loggedPassword,
             setLoggedPassword,
             loggedAccess,
-            setLoggedAccess
+            setLoggedAccess,
+            logIn,
+            logOut,
+            registerEmployee
         }}>
             {children}
         </AuthContext.Provider>
