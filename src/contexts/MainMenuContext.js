@@ -155,7 +155,18 @@ export const MainMenuProvider = ({children}) => {
             MidTierData,
             setMidTierData,
             HighTierData,
-            setHighTierData
+            setHighTierData,
+            promoteEmployee,
+            demoteEmployee,
+            addLowLevelData,
+            addMidLevelData,
+            addHighLevelData,
+            removeLowLevelData,
+            removeMidLevelData,
+            removeHighLevelData,
+            accessLowLevelData,
+            accessMidLevelData,
+            accessHighLevelData
         }}>
             {children}
         </MainMenuContext.Provider>
