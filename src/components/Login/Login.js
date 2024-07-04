@@ -1,8 +1,14 @@
 import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+
+
+
 
 function Login({ auth, login }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const {userData} = useAuth();
 
   if (auth.isAuthorised) {
     return <p>Authorised</p>;
