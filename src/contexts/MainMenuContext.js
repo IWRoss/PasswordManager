@@ -1,4 +1,4 @@
-import { useContext, useState, createContext, useMemo } from "react";
+import { useContext, useState, createContext } from "react";
 
 import { useAuth } from "./AuthContext";
 
@@ -26,7 +26,7 @@ export const MainMenuProvider = ({children}) => {
     const promoteEmployee = (username) => {
         if (userLoggedIn) {
             for (let i = 0; i < employeeData.length; i++) {
-                if (employeeData[i][0] == username) { 
+                if (employeeData[i][0] === username) { 
                     //is the entered username in the employee database?
                     switch(employeeData[i][2]){
                         case "High":
@@ -51,7 +51,7 @@ export const MainMenuProvider = ({children}) => {
         //Debug method - decrease access level
         if (userLoggedIn) {
             for (let i = 0; i < employeeData.length; i++) {
-                if (employeeData[i][0] == username) {
+                if (employeeData[i][0] === username) {
                     switch(employeeData[i][2]){
                         case "Master":
                             setEmployeeDataByIndex(i, 2, "High");
@@ -72,7 +72,7 @@ export const MainMenuProvider = ({children}) => {
     }
 
     const addLowLevelData = (username, password) => {
-        if (loggedAccess != "None") {
+        if (loggedAccess !== "None") {
             setLowTierData([
                 ...LowTierData,
                 [username, password]
@@ -81,7 +81,7 @@ export const MainMenuProvider = ({children}) => {
     }
 
     const addMidLevelData = (username, password) => {
-        if (loggedAccess != ("None" || "Low")) {
+        if (loggedAccess !== ("None" || "Low")) {
             setMidTierData([
                 ...MidTierData,
                 [username, password]
@@ -90,7 +90,7 @@ export const MainMenuProvider = ({children}) => {
     }
 
     const addHighLevelData = (username, password) => {
-        if (loggedAccess == ("High" || "Master")) {
+        if (loggedAccess === ("High" || "Master")) {
             setHighTierData([
                 ...HighTierData,
                 [username, password]
@@ -101,7 +101,7 @@ export const MainMenuProvider = ({children}) => {
     const removeLowLevelData = (username, password) => {
         const index = LowTierData.indexOf([username, password]);
         if (index !== -1) {
-            if (loggedAccess != "None") {
+            if (loggedAccess !== "None") {
                 const newArr = [...LowTierData.slice(0, index), ...LowTierData.slice(index+1)];
                 setLowTierData(newArr);
             }
@@ -111,7 +111,7 @@ export const MainMenuProvider = ({children}) => {
     const removeMidLevelData = (username, password) => {
         const index = MidTierData.indexOf([username, password]);
         if (index !== -1) {
-            if (loggedAccess != ("None" || "Low")) {
+            if (loggedAccess !== ("None" || "Low")) {
                 const newArr = [...MidTierData.slice(0, index), ...MidTierData.slice(index+1)];
                 setMidTierData(newArr);
             }
@@ -121,7 +121,7 @@ export const MainMenuProvider = ({children}) => {
     const removeHighLevelData = (username, password) => {
         const index = HighTierData.indexOf([username, password]);
         if (index !== -1) {
-            if (loggedAccess == ("High" || "Master")) {
+            if (loggedAccess === ("High" || "Master")) {
                 const newArr = [...HighTierData.slice(0, index), ...HighTierData.slice(index+1)];
                 setHighTierData(newArr);
             }
@@ -129,19 +129,19 @@ export const MainMenuProvider = ({children}) => {
     }
     
     const accessLowLevelData = () => {
-        if (loggedAccess != "None") {
+        if (loggedAccess !== "None") {
             return LowTierData;
         }
     }
 
     const accessMidLevelData = () => {
-        if (loggedAccess != ("None" || "Low")) {
+        if (loggedAccess !== ("None" || "Low")) {
             return MidTierData;
         }
     }
 
     const accessHighLevelData = () => {
-        if (loggedAccess == ("High" || "Master")) {
+        if (loggedAccess === ("High" || "Master")) {
             return HighTierData;
         }
     }

@@ -4,37 +4,17 @@ import Login from "../Login/Login";
 
 import "./App.css";
 
+import { useAuth } from "../../contexts/AuthContext";
+import DataStore from "../DataStore/DataStore";
+
 function App() {
-  const [auth, setAuth] = useState({
-    isAuthorised: false,
-    errors: [],
-    username: false,
-  });
 
-  // const login = (username, password) => {
-  //   if (username !== "admin" || password !== "password") {
-  //     setAuth({
-  //       ...auth,
-  //       isAuthorised: false,
-  //       username: false,
-  //       errors: ["Credentials not correct"],
-  //     });
-  //     return;
-  //   }
+  const {auth} = useAuth();
 
-  //   setAuth({
-  //     ...auth,
-  //     isAuthorised: true,
-  //     username: username,
-  //   });
-  // };
 
   return (
     <div className="App">
-      <Login 
-        auth={auth} 
-        //login={login} 
-      />
+      {auth.isAuthorised ? <DataStore/>: <Login/>}
     </div>
   );
 }
