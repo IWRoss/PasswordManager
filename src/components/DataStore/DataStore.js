@@ -6,7 +6,7 @@ function DataStore({}){
     const [usernameData, setUsernameData] = useState("");
     const [passwordData, setPasswordData] = useState("");
 
-    const {addHighLevelData, addMidLevelData, addLowLevelData, accessHighLevelData, accessLowLevelData, accessMidLevelData, removeHighLevelData, removeLowLevelData, removeMidLevelData} = useMainMenu();
+    const {addHighLevelData, addMidLevelData, addLowLevelData, accessHighLevelData, accessLowLevelData, accessMidLevelData, removeHighLevelData, removeLowLevelData, removeMidLevelData, promoteEmployee, demoteEmployee} = useMainMenu();
 
     return(
         <>
@@ -40,7 +40,13 @@ function DataStore({}){
             <button onClick={() => addMidLevelData(usernameData, passwordData)}>Add to Mid Level Data</button>
 
             <button onClick={() => addHighLevelData(usernameData, passwordData)}>Add to High Level Data</button>
+
+            <div>
+                <button onClick={() => promoteEmployee(usernameData, passwordData)}>[DEBUG] Increase access level</button>
+                <button onClick={() => demoteEmployee(usernameData, passwordData)}>[DEBUG] Decrease access level</button>
+            </div>
         </> 
+        
     )
 }
 export default DataStore;
