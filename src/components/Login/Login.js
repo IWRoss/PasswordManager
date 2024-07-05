@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
-function Login({ login }) {
+function Login({}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const {userData, logIn, registerEmployee, auth} = useAuth();
+  const {logIn, registerEmployee, auth} = useAuth();
 
   if (auth.isAuthorised) {
     return <p>Authorised</p>;
