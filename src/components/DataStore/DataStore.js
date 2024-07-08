@@ -41,11 +41,21 @@ function DataStore({}){
                 <button onClick={() => logOut()}>Log Out</button>
             </div>
 
-            <button onClick={() => addLowLevelData(usernameData, passwordData)}>Add to Low Level Data</button>
+            <div>
+                <button onClick={() => addLowLevelData(usernameData, passwordData)}>Add to Low Level Data</button>
 
-            <button onClick={() => addMidLevelData(usernameData, passwordData)}>Add to Mid Level Data</button>
+                <button onClick={() => addMidLevelData(usernameData, passwordData)}>Add to Mid Level Data</button>
 
-            <button onClick={() => addHighLevelData(usernameData, passwordData)}>Add to High Level Data</button>
+                <button onClick={() => addHighLevelData(usernameData, passwordData)}>Add to High Level Data</button>
+            </div>
+
+            <div>
+                <button onClick={() => removeLowLevelData(usernameData, passwordData)}>Remove from Low Level Data</button>
+
+                <button onClick={() => removeMidLevelData(usernameData, passwordData)}>Remove from Mid Level Data</button>
+
+                <button onClick={() => removeHighLevelData(usernameData, passwordData)}>Remove from High Level Data</button>
+            </div>
 
             <div>
                 <button onClick={() => promoteEmployee(usernameData, passwordData)}>[DEBUG] Increase access level</button>
