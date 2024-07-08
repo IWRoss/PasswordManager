@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useMainMenu } from "../../contexts/MainMenuContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 function DataStore({}){
     
     const [usernameData, setUsernameData] = useState("");
     const [passwordData, setPasswordData] = useState("");
 
+    const {logOut} = useAuth();
     const {addHighLevelData, addMidLevelData, addLowLevelData, accessHighLevelData, accessLowLevelData, accessMidLevelData, removeHighLevelData, removeLowLevelData, removeMidLevelData, promoteEmployee, demoteEmployee} = useMainMenu();
 
     return(
@@ -35,6 +37,10 @@ function DataStore({}){
 
             </div>
 
+            <div>
+                <button onClick={() => logOut()}>Log Out</button>
+            </div>
+
             <button onClick={() => addLowLevelData(usernameData, passwordData)}>Add to Low Level Data</button>
 
             <button onClick={() => addMidLevelData(usernameData, passwordData)}>Add to Mid Level Data</button>
@@ -45,8 +51,7 @@ function DataStore({}){
                 <button onClick={() => promoteEmployee(usernameData, passwordData)}>[DEBUG] Increase access level</button>
                 <button onClick={() => demoteEmployee(usernameData, passwordData)}>[DEBUG] Decrease access level</button>
             </div>
-        </> 
-        
+        </>  
     )
 }
 export default DataStore;

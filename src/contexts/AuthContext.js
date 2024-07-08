@@ -67,6 +67,11 @@ export const AuthProvider = ({children}) => {
             setLoggedUsername("None");
             setLoggedPassword("None");
             setLoggedAccess("None");
+            setAuth({
+                ...auth,
+                isAuthorised: false,
+                username: false,
+            });
         }
     }
 
