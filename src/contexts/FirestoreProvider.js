@@ -96,7 +96,7 @@ export const FirestoreProvider = ({ children }) => {
     }
   };
 
-  const isAdmin = useMemo(() => {
+  const isAuthorised = useMemo(() => {
     if (!auth.currentUser) {
       return false;
     }
@@ -107,6 +107,12 @@ export const FirestoreProvider = ({ children }) => {
       auth.currentUser.email.includes("@interactiveworkshops.com")
     );
   }, [currentUser]);
+
+  const isAdmin = useMemo(() => {
+    const privilegedUsers = process.env.REACT_APP_PRIVILEGED_USERS.split(",");
+
+    return privilegedUsers.find((email) => email === currentUser?.email);
+  }, [currentUser, isAuthorised]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -138,6 +144,7 @@ export const FirestoreProvider = ({ children }) => {
         auth,
         loginWithGoogle,
         logoutWithGoogle,
+        isAuthorised,
         isAdmin,
       }}
     >

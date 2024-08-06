@@ -11,9 +11,9 @@ import DataStore from "../DataStore/DataStore";
 function App() {
   // const { auth } = useAuth();
 
-  const { isAdmin } = useFirestore();
+  const { isAuthorised } = useFirestore();
 
-  return <div className="App">{isAdmin ? <DataStore /> : <Login />}</div>;
+  return <div className="App">{isAuthorised ? <DataStore /> : <Login />}</div>;
 }
 
 export default App;

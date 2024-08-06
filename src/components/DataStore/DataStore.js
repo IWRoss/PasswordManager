@@ -6,7 +6,7 @@ import { useMainMenu } from "../../contexts/MainMenuContext";
 import { useAuth } from "../../contexts/AuthContext";
 
 function DataStore({}) {
-  const { logoutWithGoogle } = useFirestore();
+  const { logoutWithGoogle, isAdmin } = useFirestore();
 
   const [usernameData, setUsernameData] = useState("");
   const [passwordData, setPasswordData] = useState("");
@@ -92,6 +92,8 @@ function DataStore({}) {
           [DEBUG] Decrease access level
         </button>
       </div>
+
+      {isAdmin && <p>Current user is an admin.</p>}
     </>
   );
 }
