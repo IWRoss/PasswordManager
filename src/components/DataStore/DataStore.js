@@ -1,67 +1,98 @@
 import { useState } from "react";
+
+import { useFirestore } from "../../contexts/FirestoreProvider";
+
 import { useMainMenu } from "../../contexts/MainMenuContext";
 import { useAuth } from "../../contexts/AuthContext";
 
-function DataStore({}){
-    
-    const [usernameData, setUsernameData] = useState("");
-    const [passwordData, setPasswordData] = useState("");
+function DataStore({}) {
+  const { logoutWithGoogle } = useFirestore();
 
-    const {logOut} = useAuth();
-    const {addHighLevelData, addMidLevelData, addLowLevelData, accessHighLevelData, accessLowLevelData, accessMidLevelData, removeHighLevelData, removeLowLevelData, removeMidLevelData, promoteEmployee, demoteEmployee} = useMainMenu();
+  const [usernameData, setUsernameData] = useState("");
+  const [passwordData, setPasswordData] = useState("");
 
-    return(
-        <>
-            <div>
-                <h2>Datastore</h2>
+  const { logOut } = useAuth();
+  const {
+    addHighLevelData,
+    addMidLevelData,
+    addLowLevelData,
+    accessHighLevelData,
+    accessLowLevelData,
+    accessMidLevelData,
+    removeHighLevelData,
+    removeLowLevelData,
+    removeMidLevelData,
+    promoteEmployee,
+    demoteEmployee,
+  } = useMainMenu();
 
-                <p>Username to Add</p>
+  return (
+    <>
+      <div>
+        <h2>Datastore</h2>
 
-                <input
-                    onChange={(e) => {
-                        setUsernameData(e.target.value);
-                    }}
-                    value={usernameData}
-                    type="text"
-                />
+        <p>Username to Add</p>
 
-                <p>Password to Add</p>
+        <input
+          onChange={(e) => {
+            setUsernameData(e.target.value);
+          }}
+          value={usernameData}
+          type="text"
+        />
 
-                <input
-                    onChange={(e) => {
-                        setPasswordData(e.target.value);
-                    }}
-                    value={passwordData}
-                    type="password"
-                />
+        <p>Password to Add</p>
 
-            </div>
+        <input
+          onChange={(e) => {
+            setPasswordData(e.target.value);
+          }}
+          value={passwordData}
+          type="password"
+        />
+      </div>
 
-            <div>
-                <button onClick={() => logOut()}>Log Out</button>
-            </div>
+      <div>
+        <button onClick={() => logoutWithGoogle()}>Log Out</button>
+      </div>
 
-            <div>
-                <button onClick={() => addLowLevelData(usernameData, passwordData)}>Add to Low Level Data</button>
+      <div>
+        <button onClick={() => addLowLevelData(usernameData, passwordData)}>
+          Add to Low Level Data
+        </button>
 
-                <button onClick={() => addMidLevelData(usernameData, passwordData)}>Add to Mid Level Data</button>
+        <button onClick={() => addMidLevelData(usernameData, passwordData)}>
+          Add to Mid Level Data
+        </button>
 
-                <button onClick={() => addHighLevelData(usernameData, passwordData)}>Add to High Level Data</button>
-            </div>
+        <button onClick={() => addHighLevelData(usernameData, passwordData)}>
+          Add to High Level Data
+        </button>
+      </div>
 
-            <div>
-                <button onClick={() => removeLowLevelData(usernameData, passwordData)}>Remove from Low Level Data</button>
+      <div>
+        <button onClick={() => removeLowLevelData(usernameData, passwordData)}>
+          Remove from Low Level Data
+        </button>
 
-                <button onClick={() => removeMidLevelData(usernameData, passwordData)}>Remove from Mid Level Data</button>
+        <button onClick={() => removeMidLevelData(usernameData, passwordData)}>
+          Remove from Mid Level Data
+        </button>
 
-                <button onClick={() => removeHighLevelData(usernameData, passwordData)}>Remove from High Level Data</button>
-            </div>
+        <button onClick={() => removeHighLevelData(usernameData, passwordData)}>
+          Remove from High Level Data
+        </button>
+      </div>
 
-            <div>
-                <button onClick={() => promoteEmployee(usernameData, passwordData)}>[DEBUG] Increase access level</button>
-                <button onClick={() => demoteEmployee(usernameData, passwordData)}>[DEBUG] Decrease access level</button>
-            </div>
-        </>  
-    )
+      <div>
+        <button onClick={() => promoteEmployee(usernameData, passwordData)}>
+          [DEBUG] Increase access level
+        </button>
+        <button onClick={() => demoteEmployee(usernameData, passwordData)}>
+          [DEBUG] Decrease access level
+        </button>
+      </div>
+    </>
+  );
 }
 export default DataStore;

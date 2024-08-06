@@ -1,0 +1,18 @@
+.loader {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: var(--light);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  color: var(--dark);
+}
+
+.loader-title {
+  font-size: 2em;
+}

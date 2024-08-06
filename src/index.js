@@ -4,17 +4,20 @@ import "./index.css";
 import App from "./components/App/App";
 import reportWebVitals from "./reportWebVitals";
 
+import { FirestoreProvider } from "./contexts/FirestoreProvider";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MainMenuProvider } from "./contexts/MainMenuContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <MainMenuProvider>
-        <App />
-      </MainMenuProvider>
-    </AuthProvider>
+    <FirestoreProvider>
+      <AuthProvider>
+        <MainMenuProvider>
+          <App />
+        </MainMenuProvider>
+      </AuthProvider>
+    </FirestoreProvider>
   </React.StrictMode>
 );
 

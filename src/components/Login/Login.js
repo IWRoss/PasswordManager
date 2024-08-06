@@ -1,49 +1,18 @@
 import { useState } from "react";
+
+import { useFirestore } from "../../contexts/FirestoreProvider";
+
 import { useAuth } from "../../contexts/AuthContext";
 
-function Login({}) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const {logIn, registerEmployee, auth} = useAuth();
-
-  if (auth.isAuthorised) {
-    return <p>Authorised</p>;
-  }
+function Login() {
+  const { loginWithGoogle } = useFirestore();
 
   return (
     <>
       <div>
         <h2>Login</h2>
-
-        <p>Username</p>
-
-        <input
-          onChange={(e) => {
-            setUsername(e.target.value);
-          }}
-          value={username}
-          type="text"
-        />
-
-        <p>Password</p>
-
-        <input
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-          value={password}
-          type="password"
-        />
+        <button onClick={() => loginWithGoogle()}>Login with Google</button>
       </div>
-
-      {auth.errors.map((error) => (
-        <p>{error}</p>
-      ))}
-
-      <button onClick={() => registerEmployee(username, password)}>Register</button>
-
-      <button onClick={() => logIn(username, password)}>Login</button>
     </>
   );
 }
