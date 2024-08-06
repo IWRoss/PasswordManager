@@ -4,7 +4,7 @@ import Login from "../Login/Login";
 
 import "./App.css";
 
-import { useFirestore } from "../../contexts/FirestoreProvider";
+import { useFirestore } from "../../contexts/FirestoreContext";
 import { useAuth } from "../../contexts/AuthContext";
 import DataStore from "../DataStore/DataStore";
 

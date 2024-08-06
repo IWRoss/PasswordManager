@@ -4,19 +4,22 @@ import "./index.css";
 import App from "./components/App/App";
 import reportWebVitals from "./reportWebVitals";
 
-import { FirestoreProvider } from "./contexts/FirestoreProvider";
+import { FirestoreProvider } from "./contexts/FirestoreContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MainMenuProvider } from "./contexts/MainMenuContext";
+import { DatabaseProvider } from "./contexts/DatabaseContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <FirestoreProvider>
-      <AuthProvider>
-        <MainMenuProvider>
-          <App />
-        </MainMenuProvider>
-      </AuthProvider>
+      <DatabaseProvider>
+        <AuthProvider>
+          <MainMenuProvider>
+            <App />
+          </MainMenuProvider>
+        </AuthProvider>
+      </DatabaseProvider>
     </FirestoreProvider>
   </React.StrictMode>
 );

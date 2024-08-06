@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useFirestore } from "../../contexts/FirestoreProvider";
+import { useFirestore } from "../../contexts/FirestoreContext";
 
 import { useAuth } from "../../contexts/AuthContext";
 
