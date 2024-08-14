@@ -84,7 +84,7 @@ export const MainMenuProvider = ({ children }) => {
   };
 
   const addHighLevelData = (username, password) => {
-    if (loggedAccess === ("High" || "Master")) {
+    if (loggedAccess !== ("None" || "Low" || "Medium")) {
       setHighTierData([...HighTierData, [username, password]]);
     }
   };
@@ -128,7 +128,7 @@ export const MainMenuProvider = ({ children }) => {
         (credential) => credential[0] === username && credential[1] === password
     );
     if (index !== -1) {
-      if (loggedAccess === ("High" || "Master")) {
+      if (loggedAccess !== ("None" || "Low" || "Medium")) {
         const newArr = [
           ...HighTierData.slice(0, index),
           ...HighTierData.slice(index + 1),
@@ -151,7 +151,7 @@ export const MainMenuProvider = ({ children }) => {
   };
 
   const accessHighLevelData = () => {
-    if (loggedAccess === ("High" || "Master")) {
+    if (loggedAccess !== ("None" || "Low" || "Medium")) {
       return HighTierData;
     }
   };
