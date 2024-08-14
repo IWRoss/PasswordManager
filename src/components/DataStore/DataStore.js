@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useFirestore } from "../../contexts/FirestoreContext";
 
@@ -62,33 +62,39 @@ function DataStore({}) {
       </div>
 
       <div>
-        <button onClick={() => {
-          if(usernameData !== "" && passwordData !== ""){
-            addLowLevelData(usernameData, passwordData)
-            setUsernameData("")
-            setPasswordData("")
-          }
-        }}>
+        <button
+          onClick={() => {
+            if (usernameData !== "" && passwordData !== "") {
+              addLowLevelData(usernameData, passwordData);
+              setUsernameData("");
+              setPasswordData("");
+            }
+          }}
+        >
           Add to Low Level Data
         </button>
 
-        <button onClick={() => {
-          if(usernameData !== "" && passwordData !== ""){
-            addMidLevelData(usernameData, passwordData)
-            setUsernameData("")
-            setPasswordData("")
-          }
-        }}>
+        <button
+          onClick={() => {
+            if (usernameData !== "" && passwordData !== "") {
+              addMidLevelData(usernameData, passwordData);
+              setUsernameData("");
+              setPasswordData("");
+            }
+          }}
+        >
           Add to Mid Level Data
         </button>
 
-        <button onClick={() => {
-          if(usernameData !== "" && passwordData !== ""){
-            addHighLevelData(usernameData, passwordData)
-            setUsernameData("")
-            setPasswordData("")
-          }
-        }}>
+        <button
+          onClick={() => {
+            if (usernameData !== "" && passwordData !== "") {
+              addHighLevelData(usernameData, passwordData);
+              setUsernameData("");
+              setPasswordData("");
+            }
+          }}
+        >
           Add to High Level Data
         </button>
       </div>
@@ -129,38 +135,80 @@ function DataStore({}) {
       </div>
 
       <div>
-        {lowTierData && lowTierData.map((el, i) => (<p key={i}>{el[0]}: {el[1]} <button onClick={removeLowLevelData(el[0], el[1])}>Remove</button></p>))}
-        <button onClick={() => {
-          setLowLevelData((prev) => {
-            if (prev.length) {
-              return [];
-            }
+        {lowTierData &&
+          lowTierData.map((el, i) => (
+            <p key={i}>
+              {el[0]}: {el[1]}{" "}
+              <button
+                onClick={() => {
+                  removeLowLevelData(el[0], el[1]);
 
-            return accessLowLevelData();
-          })
-        }}>Toggle Low Level Data</button>
+                  setLowLevelData((prev) => {
+                    return prev.filter((item) => item[0] !== el[0]);
+                  });
+                }}
+              >
+                Remove
+              </button>
+            </p>
+          ))}
+        <button
+          onClick={() => {
+            setLowLevelData((prev) => {
+              if (prev.length) {
+                return [];
+              }
 
-        {midTierData && midTierData.map((el, i) => (<p key={i}>{el[0]}: {el[1]} <button onClick={removeMidLevelData(el[0], el[1])}>Remove</button></p>))}
-        <button onClick={() => {
-          setMidLevelData((prev) => {
-            if (prev.length) {
-              return [];
-            }
+              return accessLowLevelData();
+            });
+          }}
+        >
+          Toggle Low Level Data
+        </button>
 
-            return accessMidLevelData();
-          })
-        }}>Toggle Mid Level Data</button>
+        {midTierData &&
+          midTierData.map((el, i) => (
+            <p key={i}>
+              {el[0]}: {el[1]}{" "}
+              <button onClick={removeMidLevelData(el[0], el[1])}>Remove</button>
+            </p>
+          ))}
+        <button
+          onClick={() => {
+            setMidLevelData((prev) => {
+              if (prev.length) {
+                return [];
+              }
 
-        {HighTierData && HighTierData.map((el, i) => (<p key={i}>{el[0]}: {el[1]} <button onClick={removeHighLevelData(el[0], el[1])}>Remove</button></p>))}
-        <button onClick={() => {
-          setHighLevelData((prev) => {
-            if (prev.length) {
-              return [];
-            }
+              return accessMidLevelData();
+            });
+          }}
+        >
+          Toggle Mid Level Data
+        </button>
 
-            return accessHighLevelData();
-          })
-        }}>Toggle High Level Data</button>
+        {HighTierData &&
+          HighTierData.map((el, i) => (
+            <p key={i}>
+              {el[0]}: {el[1]}{" "}
+              <button onClick={removeHighLevelData(el[0], el[1])}>
+                Remove
+              </button>
+            </p>
+          ))}
+        <button
+          onClick={() => {
+            setHighLevelData((prev) => {
+              if (prev.length) {
+                return [];
+              }
+
+              return accessHighLevelData();
+            });
+          }}
+        >
+          Toggle High Level Data
+        </button>
       </div>
 
       {isAdmin && <p>Current user is an admin.</p>}
