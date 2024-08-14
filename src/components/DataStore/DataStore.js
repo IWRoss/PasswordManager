@@ -14,7 +14,7 @@ function DataStore({}) {
   // Component data store
   const [lowTierData, setLowLevelData] = useState([]);
   const [midTierData, setMidLevelData] = useState([]);
-  const [HighTierData, setHighLevelData] = useState([]);
+  const [highTierData, setHighLevelData] = useState([]);
 
   const { logOut } = useAuth();
   const {
@@ -187,8 +187,8 @@ function DataStore({}) {
           Toggle Mid Level Data
         </button>
 
-        {HighTierData &&
-          HighTierData.map((el, i) => (
+        {highTierData &&
+          highTierData.map((el, i) => (
             <p key={i}>
               {el[0]}: {el[1]}{" "}
               <button onClick={removeHighLevelData(el[0], el[1])}>

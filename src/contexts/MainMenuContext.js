@@ -109,7 +109,9 @@ export const MainMenuProvider = ({ children }) => {
   };
 
   const removeMidLevelData = (username, password) => {
-    const index = MidTierData.indexOf([username, password]);
+    const index = MidTierData.findIndex(
+        (credential) => credential[0] === username && credential[1] === password
+    );
     if (index !== -1) {
       if (loggedAccess !== ("None" || "Low")) {
         const newArr = [
@@ -122,7 +124,9 @@ export const MainMenuProvider = ({ children }) => {
   };
 
   const removeHighLevelData = (username, password) => {
-    const index = HighTierData.indexOf([username, password]);
+    const index = HighTierData.findIndex(
+        (credential) => credential[0] === username && credential[1] === password
+    );
     if (index !== -1) {
       if (loggedAccess === ("High" || "Master")) {
         const newArr = [
