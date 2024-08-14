@@ -24,7 +24,7 @@ export const MainMenuProvider = ({children}) => {
     //Functions here
 
     const promoteEmployee = (username) => {
-        if (userLoggedIn) {
+        if (userLoggedIn && loggedAccess === "Master") {
             for (let i = 0; i < employeeData.length; i++) {
                 if (employeeData[i][0] === username) { 
                     //is the entered username in the employee database?
@@ -49,7 +49,7 @@ export const MainMenuProvider = ({children}) => {
 
     const demoteEmployee = (username) => {
         //Debug method - decrease access level
-        if (userLoggedIn) {
+        if (userLoggedIn && loggedAccess === "Master") {
             for (let i = 0; i < employeeData.length; i++) {
                 if (employeeData[i][0] === username) {
                     switch(employeeData[i][2]){
@@ -99,9 +99,11 @@ export const MainMenuProvider = ({children}) => {
     }
 
     const removeLowLevelData = (username, password) => {
+        console.log("Attempting to remove.")
         const index = LowTierData.indexOf([username, password]);
         if (index !== -1) {
             if (loggedAccess !== "None") {
+                console.log("Removing Data...")
                 const newArr = [...LowTierData.slice(0, index), ...LowTierData.slice(index+1)];
                 setLowTierData(newArr);
             }
