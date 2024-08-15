@@ -1,5 +1,6 @@
 import { useContext, useState, createContext } from "react";
 
+import { useDatabase } from "./DatabaseContext";
 import { useAuth } from "./AuthContext";
 
 export const MainMenuContext = createContext();
@@ -10,9 +11,17 @@ export function useMainMenu() {
 
 export const MainMenuProvider = ({ children }) => {
   //States here
+  const { getItems } = useDatabase();
+
+  const credentials = getItems("credentials");
 
   //Internal Vars
   const [userData, setUserData] = useState([]);
+
+  // const [LowTierData, setLowTierData] = useState(
+  //   () => credentials.filter((credential) => credential.tier === "low") ?? []
+  // );
+
   const [LowTierData, setLowTierData] = useState([]);
   const [MidTierData, setMidTierData] = useState([]);
   const [HighTierData, setHighTierData] = useState([]);
@@ -26,9 +35,9 @@ export const MainMenuProvider = ({ children }) => {
   const promoteEmployee = (username) => {
     if (userLoggedIn && loggedAccess === "Master") {
       for (let i = 0; i < employeeData.length; i++) {
-        if (employeeData[i][0] === username) {
+        if (employeeData[i].username === username) {
           //is the entered username in the employee database?
-          switch (employeeData[i][2]) {
+          switch (employeeData[i].tier) {
             case "High":
               setEmployeeDataByIndex(i, 2, "Master");
               break;
@@ -51,8 +60,8 @@ export const MainMenuProvider = ({ children }) => {
     //Debug method - decrease access level
     if (userLoggedIn && loggedAccess === "Master") {
       for (let i = 0; i < employeeData.length; i++) {
-        if (employeeData[i][0] === username) {
-          switch (employeeData[i][2]) {
+        if (employeeData[i].username === username) {
+          switch (employeeData[i].tier) {
             case "Master":
               setEmployeeDataByIndex(i, 2, "High");
               break;
@@ -73,19 +82,40 @@ export const MainMenuProvider = ({ children }) => {
 
   const addLowLevelData = (username, password) => {
     if (loggedAccess !== "None") {
-      setLowTierData([...LowTierData, [username, password]]);
+      setLowTierData([
+        ...LowTierData,
+        {
+          username,
+          password,
+          tier: "Low",
+        },
+      ]);
     }
   };
 
   const addMidLevelData = (username, password) => {
     if (loggedAccess !== ("None" || "Low")) {
-      setMidTierData([...MidTierData, [username, password]]);
+      setMidTierData([
+        ...MidTierData,
+        {
+          username,
+          password,
+          tier: "Medium",
+        },
+      ]);
     }
   };
 
   const addHighLevelData = (username, password) => {
     if (loggedAccess !== ("None" || "Low" || "Medium")) {
-      setHighTierData([...HighTierData, [username, password]]);
+      setHighTierData([
+        ...HighTierData,
+        {
+          username,
+          password,
+          tier: "High",
+        },
+      ]);
     }
   };
 
@@ -93,7 +123,8 @@ export const MainMenuProvider = ({ children }) => {
     console.log("Attempting to remove.");
 
     const index = LowTierData.findIndex(
-      (credential) => credential[0] === username && credential[1] === password
+      (credential) =>
+        credential.username === username && credential.password === password
     );
 
     if (index !== -1) {
@@ -110,7 +141,8 @@ export const MainMenuProvider = ({ children }) => {
 
   const removeMidLevelData = (username, password) => {
     const index = MidTierData.findIndex(
-        (credential) => credential[0] === username && credential[1] === password
+      (credential) =>
+        credential.username === username && credential.password === password
     );
     if (index !== -1) {
       if (loggedAccess !== ("None" || "Low")) {
@@ -125,7 +157,8 @@ export const MainMenuProvider = ({ children }) => {
 
   const removeHighLevelData = (username, password) => {
     const index = HighTierData.findIndex(
-        (credential) => credential[0] === username && credential[1] === password
+      (credential) =>
+        credential.username === username && credential.password === password
     );
     if (index !== -1) {
       if (loggedAccess !== ("None" || "Low" || "Medium")) {

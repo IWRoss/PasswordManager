@@ -126,10 +126,10 @@ function DataStore({}) {
       </div> */}
 
       <div>
-        <button onClick={() => promoteEmployee(usernameData, passwordData)}>
+        <button onClick={() => promoteEmployee(usernameData)}>
           [DEBUG] Increase access level
         </button>
-        <button onClick={() => demoteEmployee(usernameData, passwordData)}>
+        <button onClick={() => demoteEmployee(usernameData)}>
           [DEBUG] Decrease access level
         </button>
       </div>
@@ -138,13 +138,13 @@ function DataStore({}) {
         {lowTierData &&
           lowTierData.map((el, i) => (
             <p key={i}>
-              {el[0]}: {el[1]}{" "}
+              {el.username}: {el.password}{" "}
               <button
                 onClick={() => {
-                  removeLowLevelData(el[0], el[1]);
+                  removeLowLevelData(el.username, el.password);
 
                   setLowLevelData((prev) => {
-                    return prev.filter((item) => item[0] !== el[0]);
+                    return prev.filter((item) => item.username !== el.username);
                   });
                 }}
               >
@@ -169,8 +169,10 @@ function DataStore({}) {
         {midTierData &&
           midTierData.map((el, i) => (
             <p key={i}>
-              {el[0]}: {el[1]}{" "}
-              <button onClick={removeMidLevelData(el[0], el[1])}>Remove</button>
+              {el.username}: {el.password}{" "}
+              <button onClick={removeMidLevelData(el.username, el.password)}>
+                Remove
+              </button>
             </p>
           ))}
         <button
@@ -190,8 +192,8 @@ function DataStore({}) {
         {highTierData &&
           highTierData.map((el, i) => (
             <p key={i}>
-              {el[0]}: {el[1]}{" "}
-              <button onClick={removeHighLevelData(el[0], el[1])}>
+              {el.username}: {el.password}{" "}
+              <button onClick={removeHighLevelData(el.username, el.password)}>
                 Remove
               </button>
             </p>
