@@ -1,7 +1,8 @@
-import { useContext, useState, createContext } from "react";
+import { useContext, useState, createContext, useEffect } from "react";
 
 import { useDatabase } from "./DatabaseContext";
 import { useAuth } from "./AuthContext";
+import Loader from "../components/Loader/Loader";
 
 export const MainMenuContext = createContext();
 
@@ -11,22 +12,40 @@ export function useMainMenu() {
 
 export const MainMenuProvider = ({ children }) => {
   //States here
-  const { getItems, addItem, removeItem } = useDatabase();
-
-  const credentials = getItems("credentials");
+  const { getItems, addItem, deleteItem } = useDatabase();
 
   //Internal Vars
   const [userData, setUserData] = useState([]);
 
-  const [LowTierData, setLowTierData] = useState(
-    () => credentials.filter((credential) => credential.tier === "Low") ?? []
-  );
-  const [MidTierData, setMidTierData] = useState(
-    () => credentials.filter((credential) => credential.tier === "Medium") ?? []
-  );
-  const [HighTierData, setHighTierData] = useState(
-    () => credentials.filter((credential) => credential.tier === "High") ?? []
-  );
+  const [LowTierData, setLowTierData] = useState(false);
+  const [MidTierData, setMidTierData] = useState(false);
+  const [HighTierData, setHighTierData] = useState(false);
+
+  // This will fire on component mount
+  useEffect(() => {
+    (async () => {
+      const credentials = await getItems("credentials");
+
+      if (!credentials) {
+        setLowTierData([]);
+        setMidTierData([]);
+        setHighTierData([]);
+        return;
+      }
+
+      setLowTierData(
+        credentials.filter((credential) => credential.tier === "Low") ?? []
+      );
+
+      setMidTierData(
+        credentials.filter((credential) => credential.tier === "Medium") ?? []
+      );
+
+      setHighTierData(
+        credentials.filter((credential) => credential.tier === "High") ?? []
+      );
+    })();
+  }, []);
 
   //const [LowTierData, setLowTierData] = useState([]);
   //const [MidTierData, setMidTierData] = useState([]);
@@ -165,29 +184,24 @@ export const MainMenuProvider = ({ children }) => {
   const removeLowLevelData = async (username, password) => {
     console.log("Attempting to remove.");
 
-    // const index = LowTierData.findIndex(
-    //   (credential) =>
-    //     credential.username === username && credential.password === password
-    // );
-
-    const newItemID = await removeItem("credentials", {
-      username,
-      password,
-      tier: "Low",
-    });
-
-    if (!newItemID) {
-      console.error("Didn't work");
-      return;
-    }
+    const index = LowTierData.findIndex(
+      (credential) =>
+        credential.username === username && credential.password === password
+    );
 
     if (index !== -1) {
       if (loggedAccess !== "None") {
+        const credential = LowTierData[index];
+
+        await deleteItem("credentials", credential);
+
         console.log("Removing Data...");
+
         const newArr = [
           ...LowTierData.slice(0, index),
           ...LowTierData.slice(index + 1),
         ];
+
         setLowTierData(newArr);
       }
     }
@@ -268,6 +282,10 @@ export const MainMenuProvider = ({ children }) => {
       return HighTierData;
     }
   };
+
+  if (!LowTierData || !MidTierData || !HighTierData) {
+    return <Loader message="Importing data..." />;
+  }
 
   return (
     <MainMenuContext.Provider
