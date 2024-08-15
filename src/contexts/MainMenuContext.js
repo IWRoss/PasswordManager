@@ -152,6 +152,7 @@ export const MainMenuProvider = ({ children }) => {
           username,
           password,
           tier: "Medium",
+          id: newItemID,
         },
       ]);
     }
@@ -176,6 +177,7 @@ export const MainMenuProvider = ({ children }) => {
           username,
           password,
           tier: "High",
+          id: newItemID,
         },
       ]);
     }
@@ -208,58 +210,52 @@ export const MainMenuProvider = ({ children }) => {
   };
 
   const removeMidLevelData = async (username, password) => {
-    // const index = MidTierData.findIndex(
-    //   (credential) =>
-    //     credential.username === username && credential.password === password
-    // );
+    console.log("Attempting to remove.");
 
-    const newItemID = await removeItem("credentials", {
-      username,
-      password,
-      tier: "Medium",
-    });
-
-    if (!newItemID) {
-      console.error("Didn't work");
-      return;
-    }
+    const index = MidTierData.findIndex(
+      (credential) =>
+        credential.username === username && credential.password === password
+    );
 
     if (index !== -1) {
-      if (loggedAccess !== "None") {
+      if (loggedAccess !== "None" || "Low") {
+        const credential = MidTierData[index];
+
+        await deleteItem("credentials", credential);
+
         console.log("Removing Data...");
+
         const newArr = [
           ...MidTierData.slice(0, index),
           ...MidTierData.slice(index + 1),
         ];
+
         setMidTierData(newArr);
       }
     }
   };
 
   const removeHighLevelData = async (username, password) => {
-    // const index = HighTierData.findIndex(
-    //   (credential) =>
-    //     credential.username === username && credential.password === password
-    // );
+    console.log("Attempting to remove.");
 
-    const newItemID = await removeItem("credentials", {
-      username,
-      password,
-      tier: "High",
-    });
-
-    if (!newItemID) {
-      console.error("Didn't work");
-      return;
-    }
+    const index = HighTierData.findIndex(
+      (credential) =>
+        credential.username === username && credential.password === password
+    );
 
     if (index !== -1) {
-      if (loggedAccess !== "None") {
+      if (loggedAccess !== "None" || "Low" || "Medium") {
+        const credential = HighTierData[index];
+
+        await deleteItem("credentials", credential);
+
         console.log("Removing Data...");
+
         const newArr = [
           ...HighTierData.slice(0, index),
           ...HighTierData.slice(index + 1),
         ];
+
         setHighTierData(newArr);
       }
     }
