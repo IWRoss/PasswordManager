@@ -52,7 +52,10 @@ export const DatabaseProvider = ({ children }) => {
   };
 
   const addItem = async (collectionName, item) => {
-    const docRef = await addDoc(collection(db, collectionName), item);
+    const { id, ...itemData } = item;
+
+    const docRef = await addDoc(collection(db, collectionName), itemData);
+
     return docRef.id;
   };
 

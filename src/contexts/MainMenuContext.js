@@ -11,20 +11,26 @@ export function useMainMenu() {
 
 export const MainMenuProvider = ({ children }) => {
   //States here
-  const { getItems } = useDatabase();
+  const { getItems, addItem, removeItem } = useDatabase();
 
   const credentials = getItems("credentials");
 
   //Internal Vars
   const [userData, setUserData] = useState([]);
 
-  // const [LowTierData, setLowTierData] = useState(
-  //   () => credentials.filter((credential) => credential.tier === "low") ?? []
-  // );
+  const [LowTierData, setLowTierData] = useState(
+    () => credentials.filter((credential) => credential.tier === "Low") ?? []
+  );
+  const [MidTierData, setMidTierData] = useState(
+    () => credentials.filter((credential) => credential.tier === "Medium") ?? []
+  );
+  const [HighTierData, setHighTierData] = useState(
+    () => credentials.filter((credential) => credential.tier === "High") ?? []
+  );
 
-  const [LowTierData, setLowTierData] = useState([]);
-  const [MidTierData, setMidTierData] = useState([]);
-  const [HighTierData, setHighTierData] = useState([]);
+  //const [LowTierData, setLowTierData] = useState([]);
+  //const [MidTierData, setMidTierData] = useState([]);
+  //const [HighTierData, setHighTierData] = useState([]);
 
   //Imported Vars
   const { employeeData, loggedAccess, setEmployeeDataByIndex, userLoggedIn } =
@@ -80,21 +86,47 @@ export const MainMenuProvider = ({ children }) => {
     }
   };
 
-  const addLowLevelData = (username, password) => {
+  const addLowLevelData = async (username, password) => {
     if (loggedAccess !== "None") {
+      // Perform action on database
+      const newItemID = await addItem("credentials", {
+        username,
+        password,
+        tier: "Low",
+      });
+
+      // Confirm action was performed on database
+      if (!newItemID) {
+        console.error("Didn't work");
+        return;
+      }
+
+      // If so, update state
       setLowTierData([
         ...LowTierData,
         {
           username,
           password,
           tier: "Low",
+          id: newItemID,
         },
       ]);
     }
   };
 
-  const addMidLevelData = (username, password) => {
+  const addMidLevelData = async (username, password) => {
     if (loggedAccess !== ("None" || "Low")) {
+      const newItemID = await addItem("credentials", {
+        username,
+        password,
+        tier: "Medium",
+      });
+
+      if (!newItemID) {
+        console.error("Didn't work");
+        return;
+      }
+
       setMidTierData([
         ...MidTierData,
         {
@@ -106,8 +138,19 @@ export const MainMenuProvider = ({ children }) => {
     }
   };
 
-  const addHighLevelData = (username, password) => {
+  const addHighLevelData = async (username, password) => {
     if (loggedAccess !== ("None" || "Low" || "Medium")) {
+      const newItemID = await addItem("credentials", {
+        username,
+        password,
+        tier: "High",
+      });
+
+      if (!newItemID) {
+        console.error("Didn't work");
+        return;
+      }
+
       setHighTierData([
         ...HighTierData,
         {
@@ -119,13 +162,24 @@ export const MainMenuProvider = ({ children }) => {
     }
   };
 
-  const removeLowLevelData = (username, password) => {
+  const removeLowLevelData = async (username, password) => {
     console.log("Attempting to remove.");
 
-    const index = LowTierData.findIndex(
-      (credential) =>
-        credential.username === username && credential.password === password
-    );
+    // const index = LowTierData.findIndex(
+    //   (credential) =>
+    //     credential.username === username && credential.password === password
+    // );
+
+    const newItemID = await removeItem("credentials", {
+      username,
+      password,
+      tier: "Low",
+    });
+
+    if (!newItemID) {
+      console.error("Didn't work");
+      return;
+    }
 
     if (index !== -1) {
       if (loggedAccess !== "None") {
@@ -139,13 +193,26 @@ export const MainMenuProvider = ({ children }) => {
     }
   };
 
-  const removeMidLevelData = (username, password) => {
-    const index = MidTierData.findIndex(
-      (credential) =>
-        credential.username === username && credential.password === password
-    );
+  const removeMidLevelData = async (username, password) => {
+    // const index = MidTierData.findIndex(
+    //   (credential) =>
+    //     credential.username === username && credential.password === password
+    // );
+
+    const newItemID = await removeItem("credentials", {
+      username,
+      password,
+      tier: "Medium",
+    });
+
+    if (!newItemID) {
+      console.error("Didn't work");
+      return;
+    }
+
     if (index !== -1) {
-      if (loggedAccess !== ("None" || "Low")) {
+      if (loggedAccess !== "None") {
+        console.log("Removing Data...");
         const newArr = [
           ...MidTierData.slice(0, index),
           ...MidTierData.slice(index + 1),
@@ -155,13 +222,26 @@ export const MainMenuProvider = ({ children }) => {
     }
   };
 
-  const removeHighLevelData = (username, password) => {
-    const index = HighTierData.findIndex(
-      (credential) =>
-        credential.username === username && credential.password === password
-    );
+  const removeHighLevelData = async (username, password) => {
+    // const index = HighTierData.findIndex(
+    //   (credential) =>
+    //     credential.username === username && credential.password === password
+    // );
+
+    const newItemID = await removeItem("credentials", {
+      username,
+      password,
+      tier: "High",
+    });
+
+    if (!newItemID) {
+      console.error("Didn't work");
+      return;
+    }
+
     if (index !== -1) {
-      if (loggedAccess !== ("None" || "Low" || "Medium")) {
+      if (loggedAccess !== "None") {
+        console.log("Removing Data...");
         const newArr = [
           ...HighTierData.slice(0, index),
           ...HighTierData.slice(index + 1),
