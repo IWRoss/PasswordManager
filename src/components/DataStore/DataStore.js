@@ -170,7 +170,15 @@ function DataStore({}) {
           midTierData.map((el, i) => (
             <p key={i}>
               {el.username}: {el.password}{" "}
-              <button onClick={removeMidLevelData(el.username, el.password)}>
+              <button
+                onClick={() => {
+                  removeMidLevelData(el.username, el.password);
+
+                  setMidLevelData((prev) => {
+                    return prev.filter((item) => item.username !== el.username);
+                  });
+                }}
+              >
                 Remove
               </button>
             </p>
@@ -193,7 +201,15 @@ function DataStore({}) {
           highTierData.map((el, i) => (
             <p key={i}>
               {el.username}: {el.password}{" "}
-              <button onClick={removeHighLevelData(el.username, el.password)}>
+              <button
+                onClick={() => {
+                  removeHighLevelData(el.username, el.password);
+
+                  setHighLevelData((prev) => {
+                    return prev.filter((item) => item.username !== el.username);
+                  });
+                }}
+              >
                 Remove
               </button>
             </p>
