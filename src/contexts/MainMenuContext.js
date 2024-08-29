@@ -23,6 +23,8 @@ export const MainMenuProvider = ({ children }) => {
   const [HighTierData, setHighTierData] = useState(false);
   const nodeRSA = new NodeRSA();
 
+  let publicKey = "Z8W4M7K3R2P1V9L6N5T";
+
   // This will fire on component mount
   useEffect(() => {
     (async () => {
@@ -112,7 +114,7 @@ export const MainMenuProvider = ({ children }) => {
       // Perform action on database
       const newItemID = await addItem("credentials", {
         username,
-        password,
+        password: encryptData(password, publicKey),
         tier: "Low",
       });
 
@@ -123,15 +125,14 @@ export const MainMenuProvider = ({ children }) => {
       }
 
       // If so, update state
-      setLowTierData([
-        ...LowTierData,
-        {
-          username,
-          password,
-          tier: "Low",
-          id: newItemID,
-        },
-      ]);
+      setLowTierData(
+        credentials
+          .filter((credential) => credential.tier === "Low")
+          .map((credential) => ({
+            ...credential,
+            password: decryptPublicKey(credential.password, publicKey),
+          })) ?? []
+      );
     }
   };
 
@@ -139,7 +140,7 @@ export const MainMenuProvider = ({ children }) => {
     if (loggedAccess !== ("None" || "Low")) {
       const newItemID = await addItem("credentials", {
         username,
-        password,
+        password: encryptData(password, publicKey),
         tier: "Medium",
       });
 
@@ -148,15 +149,14 @@ export const MainMenuProvider = ({ children }) => {
         return;
       }
 
-      setMidTierData([
-        ...MidTierData,
-        {
-          username,
-          password,
-          tier: "Medium",
-          id: newItemID,
-        },
-      ]);
+      setMidTierData(
+        credentials
+          .filter((credential) => credential.tier === "Medium")
+          .map((credential) => ({
+            ...credential,
+            password: decryptPublicKey(credential.password, publicKey),
+          })) ?? []
+      );
     }
   };
 
@@ -164,7 +164,7 @@ export const MainMenuProvider = ({ children }) => {
     if (loggedAccess !== ("None" || "Low" || "Medium")) {
       const newItemID = await addItem("credentials", {
         username,
-        password,
+        password: encryptData(password, publicKey),
         tier: "High",
       });
 
@@ -173,15 +173,14 @@ export const MainMenuProvider = ({ children }) => {
         return;
       }
 
-      setHighTierData([
-        ...HighTierData,
-        {
-          username,
-          password,
-          tier: "High",
-          id: newItemID,
-        },
-      ]);
+      setHighTierData(
+        credentials
+          .filter((credential) => credential.tier === "High")
+          .map((credential) => ({
+            ...credential,
+            password: decryptPublicKey(credential.password, publicKey),
+          })) ?? []
+      );
     }
   };
 
