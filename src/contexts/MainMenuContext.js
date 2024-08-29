@@ -3,6 +3,7 @@ import { useContext, useState, createContext, useEffect } from "react";
 import { useDatabase } from "./DatabaseContext";
 import { useAuth } from "./AuthContext";
 import Loader from "../components/Loader/Loader";
+import NodeRSA from "encrypt-rsa";
 
 export const MainMenuContext = createContext();
 
@@ -20,6 +21,7 @@ export const MainMenuProvider = ({ children }) => {
   const [LowTierData, setLowTierData] = useState(false);
   const [MidTierData, setMidTierData] = useState(false);
   const [HighTierData, setHighTierData] = useState(false);
+  const nodeRSA = new NodeRSA();
 
   // This will fire on component mount
   useEffect(() => {

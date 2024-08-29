@@ -19,6 +19,8 @@ import {
 } from "firebase/firestore";
 
 import { useFirestore } from "./FirestoreContext";
+import { useEffect } from "./MainMenuContext";
+import { encryptData, decryptPublicKey } from "../func/encryption";
 
 /**
  * Create Context for Provider
@@ -42,6 +44,8 @@ export function useDatabase() {
 export const DatabaseProvider = ({ children }) => {
   const { db } = useFirestore();
 
+  let publicKey = Z8W4M7K3R2P1V9L6N5T;
+
   const getItems = async (collectionName) => {
     const querySnapshot = await getDocs(collection(db, collectionName));
     const items = [];
@@ -53,6 +57,7 @@ export const DatabaseProvider = ({ children }) => {
 
   const addItem = async (collectionName, item) => {
     const { id, ...itemData } = item;
+    itemData = encryptData(itemData, publicKey);
 
     const docRef = await addDoc(collection(db, collectionName), itemData);
 
