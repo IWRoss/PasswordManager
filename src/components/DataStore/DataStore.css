@@ -1,0 +1,66 @@
+.datastore {
+  display: grid;
+  padding: 1rem;
+  gap: 1rem;
+
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+}
+
+.datastore > * {
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+
+.header {
+  grid-column: 1 / 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header > * {
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.form-fields {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: nowrap;
+}
+
+.form-fields > * {
+  flex-grow: 1;
+}
+
+.form-fields label {
+  display: block;
+}
+
+.form-fields input {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: var(--iw-orange);
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+}

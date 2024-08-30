@@ -3,7 +3,11 @@ import { useContext, useState, createContext, useEffect } from "react";
 import { useDatabase } from "./DatabaseContext";
 import { useAuth } from "./AuthContext";
 import Loader from "../components/Loader/Loader";
-import NodeRSA from "encrypt-rsa";
+
+import {
+  encryptWithPublicKey,
+  decryptWithPrivateKey,
+} from "../func/encryption";
 
 export const MainMenuContext = createContext();
 
@@ -21,14 +25,13 @@ export const MainMenuProvider = ({ children }) => {
   const [LowTierData, setLowTierData] = useState(false);
   const [MidTierData, setMidTierData] = useState(false);
   const [HighTierData, setHighTierData] = useState(false);
-  const nodeRSA = new NodeRSA();
 
   let publicKey = "Z8W4M7K3R2P1V9L6N5T";
 
   // This will fire on component mount
   useEffect(() => {
     (async () => {
-      const credentials = await getItems("credentials");
+      let credentials = await getItems("credentials");
 
       if (!credentials) {
         setLowTierData([]);
@@ -36,6 +39,12 @@ export const MainMenuProvider = ({ children }) => {
         setHighTierData([]);
         return;
       }
+
+      // Let's decrypt the passwords before we add to state
+      credentials = credentials.map((credential) => ({
+        ...credential,
+        password: decryptWithPrivateKey(credential.password),
+      }));
 
       setLowTierData(
         credentials.filter((credential) => credential.tier === "Low") ?? []
@@ -114,7 +123,7 @@ export const MainMenuProvider = ({ children }) => {
       // Perform action on database
       const newItemID = await addItem("credentials", {
         username,
-        password: encryptData(password, publicKey),
+        password: encryptWithPublicKey(password),
         tier: "Low",
       });
 
@@ -125,14 +134,15 @@ export const MainMenuProvider = ({ children }) => {
       }
 
       // If so, update state
-      setLowTierData(
-        credentials
-          .filter((credential) => credential.tier === "Low")
-          .map((credential) => ({
-            ...credential,
-            password: decryptPublicKey(credential.password, publicKey),
-          })) ?? []
-      );
+      setLowTierData([
+        ...LowTierData,
+        {
+          username,
+          password,
+          tier: "Low",
+          id: newItemID,
+        },
+      ]);
     }
   };
 
@@ -140,7 +150,7 @@ export const MainMenuProvider = ({ children }) => {
     if (loggedAccess !== ("None" || "Low")) {
       const newItemID = await addItem("credentials", {
         username,
-        password: encryptData(password, publicKey),
+        password: encryptWithPublicKey(password),
         tier: "Medium",
       });
 
@@ -149,14 +159,15 @@ export const MainMenuProvider = ({ children }) => {
         return;
       }
 
-      setMidTierData(
-        credentials
-          .filter((credential) => credential.tier === "Medium")
-          .map((credential) => ({
-            ...credential,
-            password: decryptPublicKey(credential.password, publicKey),
-          })) ?? []
-      );
+      setMidTierData([
+        ...MidTierData,
+        {
+          username,
+          password,
+          tier: "Mid",
+          id: newItemID,
+        },
+      ]);
     }
   };
 
@@ -164,7 +175,7 @@ export const MainMenuProvider = ({ children }) => {
     if (loggedAccess !== ("None" || "Low" || "Medium")) {
       const newItemID = await addItem("credentials", {
         username,
-        password: encryptData(password, publicKey),
+        password: encryptWithPublicKey(password),
         tier: "High",
       });
 
@@ -173,14 +184,15 @@ export const MainMenuProvider = ({ children }) => {
         return;
       }
 
-      setHighTierData(
-        credentials
-          .filter((credential) => credential.tier === "High")
-          .map((credential) => ({
-            ...credential,
-            password: decryptPublicKey(credential.password, publicKey),
-          })) ?? []
-      );
+      setHighTierData([
+        ...HighTierData,
+        {
+          username,
+          password,
+          tier: "High",
+          id: newItemID,
+        },
+      ]);
     }
   };
 

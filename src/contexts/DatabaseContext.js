@@ -19,8 +19,6 @@ import {
 } from "firebase/firestore";
 
 import { useFirestore } from "./FirestoreContext";
-import { useEffect } from "./MainMenuContext";
-import { encryptData, decryptPublicKey } from "../func/encryption";
 
 /**
  * Create Context for Provider

@@ -5,6 +5,11 @@ import { useFirestore } from "../../contexts/FirestoreContext";
 import { useMainMenu } from "../../contexts/MainMenuContext";
 import { useAuth } from "../../contexts/AuthContext";
 
+import Credential from "../Credential/Credential";
+
+// Import styles
+import "./DataStore.css";
+
 function DataStore({}) {
   const { logoutWithGoogle, isAdmin } = useFirestore();
 
@@ -32,205 +37,208 @@ function DataStore({}) {
   } = useMainMenu();
 
   return (
-    <>
-      <div>
+    <div className="datastore">
+      <header className="header">
         <h2>Datastore</h2>
+        {isAdmin && <p>Current user is an admin.</p>}
+        <div>
+          <button onClick={() => logoutWithGoogle()}>Log Out</button>
+        </div>
+      </header>
 
-        <p>Username to Add</p>
+      <div className="controls">
+        <div className="show">
+          <h3>Show Credentials</h3>
 
-        <input
-          onChange={(e) => {
-            setUsernameData(e.target.value);
-          }}
-          value={usernameData}
-          type="text"
-        />
+          <div className="button-group">
+            <button
+              onClick={() => {
+                setLowLevelData((prev) => {
+                  if (prev.length) {
+                    return [];
+                  }
 
-        <p>Password to Add</p>
+                  return accessLowLevelData();
+                });
+              }}
+            >
+              Toggle Low Level Credentials
+            </button>
 
-        <input
-          onChange={(e) => {
-            setPasswordData(e.target.value);
-          }}
-          value={passwordData}
-          type="password"
-        />
+            <button
+              onClick={() => {
+                setMidLevelData((prev) => {
+                  if (prev.length) {
+                    return [];
+                  }
+
+                  return accessMidLevelData();
+                });
+              }}
+            >
+              Toggle Mid Level Credentials
+            </button>
+
+            <button
+              onClick={() => {
+                setHighLevelData((prev) => {
+                  if (prev.length) {
+                    return [];
+                  }
+
+                  return accessHighLevelData();
+                });
+              }}
+            >
+              Toggle High Level Credentials
+            </button>
+          </div>
+        </div>
+
+        <div className="add">
+          <h3>Add Credentials</h3>
+
+          <div className="form-fields">
+            <div className="form-group">
+              <label>Username to Add</label>
+
+              <input
+                onChange={(e) => {
+                  setUsernameData(e.target.value);
+                }}
+                value={usernameData}
+                type="text"
+              />
+            </div>
+            <div className="form-group">
+              <label>Password to Add</label>
+
+              <input
+                onChange={(e) => {
+                  setPasswordData(e.target.value);
+                }}
+                value={passwordData}
+                type="password"
+              />
+            </div>
+          </div>
+
+          <div className="button-group">
+            <button
+              onClick={() => {
+                if (usernameData !== "" && passwordData !== "") {
+                  addLowLevelData(usernameData, passwordData);
+                  setUsernameData("");
+                  setPasswordData("");
+                }
+              }}
+            >
+              Add to Low Level Data
+            </button>
+
+            <button
+              onClick={() => {
+                if (usernameData !== "" && passwordData !== "") {
+                  addMidLevelData(usernameData, passwordData);
+                  setUsernameData("");
+                  setPasswordData("");
+                }
+              }}
+            >
+              Add to Mid Level Data
+            </button>
+
+            <button
+              onClick={() => {
+                if (usernameData !== "" && passwordData !== "") {
+                  addHighLevelData(usernameData, passwordData);
+                  setUsernameData("");
+                  setPasswordData("");
+                }
+              }}
+            >
+              Add to High Level Data
+            </button>
+          </div>
+        </div>
+
+        {isAdmin && (
+          <div class="privileges">
+            <h3>Privileges</h3>
+
+            <div className="button-group">
+              <button onClick={() => promoteEmployee(usernameData)}>
+                [DEBUG] Increase access level
+              </button>
+              <button onClick={() => demoteEmployee(usernameData)}>
+                [DEBUG] Decrease access level
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div>
-        <button onClick={() => logoutWithGoogle()}>Log Out</button>
-      </div>
-
-      <div>
-        <button
-          onClick={() => {
-            if (usernameData !== "" && passwordData !== "") {
-              addLowLevelData(usernameData, passwordData);
-              setUsernameData("");
-              setPasswordData("");
-            }
-          }}
-        >
-          Add to Low Level Data
-        </button>
-
-        <button
-          onClick={() => {
-            if (usernameData !== "" && passwordData !== "") {
-              addMidLevelData(usernameData, passwordData);
-              setUsernameData("");
-              setPasswordData("");
-            }
-          }}
-        >
-          Add to Mid Level Data
-        </button>
-
-        <button
-          onClick={() => {
-            if (usernameData !== "" && passwordData !== "") {
-              addHighLevelData(usernameData, passwordData);
-              setUsernameData("");
-              setPasswordData("");
-            }
-          }}
-        >
-          Add to High Level Data
-        </button>
-      </div>
-
-      {/* <div>
-        <button onClick={() => {
-          removeLowLevelData(usernameData, passwordData)
-          setUsernameData("")
-          setPasswordData("")
-        }}>
-          Remove from Low Level Data
-        </button>
-
-        <button onClick={() => {
-          removeMidLevelData(usernameData, passwordData)
-          setUsernameData("")
-          setPasswordData("")
-        }}>
-          Remove from Mid Level Data
-        </button>
-
-        <button onClick={() => {
-          removeHighLevelData(usernameData, passwordData)
-          setUsernameData("")
-          setPasswordData("")
-        }}>
-          Remove from High Level Data
-        </button>
-      </div> */}
-
-      <div>
-        <button onClick={() => promoteEmployee(usernameData)}>
-          [DEBUG] Increase access level
-        </button>
-        <button onClick={() => demoteEmployee(usernameData)}>
-          [DEBUG] Decrease access level
-        </button>
-      </div>
-
-      <div>
-        {lowTierData &&
+      <div className="data">
+        <h3>Low Level Credentials</h3>
+        {lowTierData.length ? (
           lowTierData.map((el, i) => (
-            <p key={i}>
-              {el.username}: {el.password}{" "}
-              <button
-                onClick={() => {
-                  removeLowLevelData(el.username, el.password);
+            <Credential
+              key={i}
+              credential={el}
+              removeAction={(el) => {
+                removeLowLevelData(el.username, el.password);
 
-                  setLowLevelData((prev) => {
-                    return prev.filter((item) => item.username !== el.username);
-                  });
-                }}
-              >
-                Remove
-              </button>
-            </p>
-          ))}
-        <button
-          onClick={() => {
-            setLowLevelData((prev) => {
-              if (prev.length) {
-                return [];
-              }
+                setLowLevelData((prev) => {
+                  return prev.filter((item) => item.username !== el.username);
+                });
+              }}
+            />
+          ))
+        ) : (
+          <p>Credentials hidden or do not exist</p>
+        )}
 
-              return accessLowLevelData();
-            });
-          }}
-        >
-          Toggle Low Level Data
-        </button>
+        <h3>Mid Level Credentials</h3>
 
-        {midTierData &&
+        {midTierData.length ? (
           midTierData.map((el, i) => (
-            <p key={i}>
-              {el.username}: {el.password}{" "}
-              <button
-                onClick={() => {
-                  removeMidLevelData(el.username, el.password);
+            <Credential
+              key={i}
+              credential={el}
+              removeAction={(el) => {
+                removeMidLevelData(el.username, el.password);
 
-                  setMidLevelData((prev) => {
-                    return prev.filter((item) => item.username !== el.username);
-                  });
-                }}
-              >
-                Remove
-              </button>
-            </p>
-          ))}
-        <button
-          onClick={() => {
-            setMidLevelData((prev) => {
-              if (prev.length) {
-                return [];
-              }
+                setMidLevelData((prev) => {
+                  return prev.filter((item) => item.username !== el.username);
+                });
+              }}
+            />
+          ))
+        ) : (
+          <p>Credentials hidden or do not exist</p>
+        )}
 
-              return accessMidLevelData();
-            });
-          }}
-        >
-          Toggle Mid Level Data
-        </button>
+        <h3>High Level Credentials</h3>
 
-        {highTierData &&
+        {highTierData.length ? (
           highTierData.map((el, i) => (
-            <p key={i}>
-              {el.username}: {el.password}{" "}
-              <button
-                onClick={() => {
-                  removeHighLevelData(el.username, el.password);
+            <Credential
+              key={i}
+              credential={el}
+              removeAction={(el) => {
+                removeHighLevelData(el.username, el.password);
 
-                  setHighLevelData((prev) => {
-                    return prev.filter((item) => item.username !== el.username);
-                  });
-                }}
-              >
-                Remove
-              </button>
-            </p>
-          ))}
-        <button
-          onClick={() => {
-            setHighLevelData((prev) => {
-              if (prev.length) {
-                return [];
-              }
-
-              return accessHighLevelData();
-            });
-          }}
-        >
-          Toggle High Level Data
-        </button>
+                setHighLevelData((prev) => {
+                  return prev.filter((item) => item.username !== el.username);
+                });
+              }}
+            />
+          ))
+        ) : (
+          <p>Credentials hidden or do not exist</p>
+        )}
       </div>
-
-      {isAdmin && <p>Current user is an admin.</p>}
-    </>
+    </div>
   );
 }
 export default DataStore;
